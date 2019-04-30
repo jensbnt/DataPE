@@ -67,7 +67,6 @@ def Opdracht5(data):
     temp = data.groupby(["positie","categorie"]).agg({'aantal gemaakte goalen':'sum'}).reset_index()
     goals = []
     for arr in temp.values : goals.append(arr[2])
-    print(goals)
 
     # Leeftijd
     categorie = ([i for i in data["categorie"].unique()] * 5)
@@ -83,9 +82,11 @@ def Opdracht5(data):
 
 
 def Opdracht6(data):
+    print("-- AVERAGE --")
     average = data.groupby(["positie"]).agg({'aantal gemaakte goalen':np.average}).reset_index()
     print(average)
 
+    print("-- MEDIAN --")
     median = data.groupby(["positie"]).agg({'aantal gemaakte goalen':np.median}).reset_index()
     print(median)
 
@@ -93,6 +94,36 @@ def Opdracht6(data):
 def Opdracht7(data):
     gewichten = data.query("categorie==1")
     print(gewichten["gewicht"].values.std())
+
+
+def Opdracht9(data):
+    columns = [i for i in data["inzet"].unique()]
+    temp = data["inzet"].value_counts()
+    inzetten = []
+
+    for col in columns:
+        inzetten.append(temp[col])
+
+    plt.pie(inzetten, labels=columns, autopct='%1.1f%%')
+    plt.axis('equal')
+    plt.show()
+
+
+def Opdracht10(data):
+    positions = ['linkervleugel', 'rechtervleugel', 'piloot']
+    goals_arr = []
+
+    for pos in positions:
+        goals_per_pos = data.groupby(["positie"]).get_group(pos)["aantal gemaakte goalen"]
+        goals_arr.append(goals_per_pos.values)
+
+    df = pd.DataFrame({'Positions' : ["goal"] * len(goals_arr[0]),
+                   positions[0] : goals_arr[0],
+                   positions[1] : goals_arr[1],
+                   positions[2] : goals_arr[2]})
+
+    df.boxplot()
+    plt.show()
 
 
 # Waarschuwing afzetten
@@ -118,7 +149,13 @@ addInzet(data)
 #Opdracht6(data)
 
 # Opdracht 7
-Opdracht7(data)
+#Opdracht7(data)
+
+# Opdracht 9
+#Opdracht9(data)
+
+# Opdracht 10
+#Opdracht10(data)
 
 # Print
 #print(data)
